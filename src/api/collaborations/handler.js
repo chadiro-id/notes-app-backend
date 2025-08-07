@@ -4,6 +4,26 @@ class CollaborationsHandler {
     this._notesService = notesService;
     this._validator = validator;
   }
+
+  async postCollaborationHandler(request, h) {
+    this._validator.validateCollaborationPayload(request.payload);
+
+    const { id: credentialId } = request.auth.credentials;
+    const { noteId, userId } = request.payload;
+
+    await this._notesService.verifyNoteOwner(noteId, credentialId);
+    const collaborationId = await this._collaborationsService.addCollaboration(noteId, userId);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Kolaborasi berhasil ditambahkan',
+      data: {
+        collaborationId,
+      },
+    });
+    response.code(201);
+    return response;
+  }
 }
 
 module.exports = CollaborationsHandler;
