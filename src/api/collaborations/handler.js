@@ -24,6 +24,20 @@ class CollaborationsHandler {
     response.code(201);
     return response;
   }
+
+  async deleteCollaborationHandler(request) {
+    this._validator.validateCollaborationPayload(request.payload);
+    const { id: credentialId } = request.auth.credentials;
+    const { noteId, userId } = request.payload;
+
+    await this._notesService.verifyNoteOwner(noteId, credentialId);
+    await this._collaborationsService.deleteCollaboration(noteId, userId);
+
+    return {
+      status: 'success',
+      message: 'Kolaborasi berhasil dihapus',
+    };
+  }
 }
 
 module.exports = CollaborationsHandler;
