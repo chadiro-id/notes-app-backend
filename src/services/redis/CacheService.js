@@ -12,6 +12,12 @@ class CacheService {
     });
     this._client.connect();
   }
+
+  async set(key, value, expirationInSecond = 3600) {
+    await this._client.set(key, value, {
+      EX: expirationInSecond,
+    });
+  }
 }
 
 module.exports = CacheService;
