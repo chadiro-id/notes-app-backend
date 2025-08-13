@@ -24,6 +24,10 @@ class CacheService {
     if (result === null) throw new Error('Cache tidak ditemukan');
     return result;
   }
+
+  delete(key) {
+    return this._client.del(key);
+  }
 }
 
 module.exports = CacheService;
